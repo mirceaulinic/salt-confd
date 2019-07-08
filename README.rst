@@ -1,10 +1,12 @@
-# salt-confd
+salt-confd
+----------
 
-Lightweight Salt package for [confd](https://github.com/kelseyhightower/confd)
-style management of local application configuration files.
+Lightweight Salt package for `confd 
+<https://github.com/kelseyhightower/confd>`__ style management of local
+application configuration files.
 
 Why
----
+~~~
 
 Please note that the intent of this software package is not to compete against
 ``confd`` or other popular equivalents; it was born purely out of my personal
@@ -36,8 +38,8 @@ If you want, in short, here's why I took this approach:
    under a specific path.
 
 Installation
-------------
+~~~~~~~~~~~~
 
-```bash
-$ pip install salt-confd
-```
+.. code-block:: bash
+
+    $ pip install salt-confd
