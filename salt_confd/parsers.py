@@ -87,7 +87,7 @@ class SaltConfdOptionParser(six.with_metaclass(salt.utils.parsers.OptionParserMe
     usage = '%prog [options]'
 
     # ConfigDirMixIn config filename attribute
-    _config_filename_ = 'confd'
+    _config_filename_ = 'confd.yml'
 
     # LogLevelMixIn attributes
     _default_logging_level_ = config.DEFAULT_MINION_OPTS['log_level']
@@ -110,6 +110,11 @@ class SaltConfdOptionParser(six.with_metaclass(salt.utils.parsers.OptionParserMe
             '--pillar-root',
             default=None,
             help='Set this directory as the base pillar root.'
+        )
+        self.add_option(
+            '--confdir',
+            default='/etc/salt/confd',
+            help='The Salt confd conf directory'
         )
         self.add_option(
             '--retcode-passthrough',
