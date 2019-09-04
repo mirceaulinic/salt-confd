@@ -28,6 +28,11 @@ In short, here's why I took this approach:
   separate files / directory tree / or even repositories for different
   base operating system distribution); with Salt, this can be very easily done
   using the Grains.
+* Not only local templates: it often happens to have your template on a server
+  elsewhere; at the end of the day, you need the resulting config file, not its
+  source.
+  With Salt Confd, you can use source files directly available via HTTP, S3,
+  SWIFT, SVN, or FTP.
 * Salt covers a large variety of backends to fetch the data from (including 
   Redis, Vault, Consul, etcd, and so on).
 * Salt is easily extensible (not by forking the project), but in
