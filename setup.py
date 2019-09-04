@@ -54,5 +54,5 @@ setup(
     keywords=('confd', 'docker', 'kubernetes', 'configuration', 'application'),
     include_package_data=True,
     install_requires=reqs,
-    # entry_points={'console_scripts': ['salt-confd=salt_confd.scripts:salt_confd']},
+    entry_points={'console_scripts': ['salt-confd=salt_confd.scripts:salt_confd']},
 )
