@@ -1,2 +1,2 @@
-pypi.rst
-salt_confd/*.sls
+include pypi.rst
+include salt_confd/*.sls
