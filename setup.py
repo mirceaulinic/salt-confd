@@ -16,7 +16,7 @@ with open("requirements.txt", "r") as fs:
 
 setup(
     name='salt-confd',
-    version='2019.7.0a1',
+    version='2019.9.0a1',
     namespace_packages=['salt_confd'],
     packages=find_packages(),
     author='Mircea Ulinic',
@@ -24,7 +24,7 @@ setup(
     description='Lightweight Salt package for confd-style management of local application configuration files',
     long_description=long_description,
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'License :: OSI Approved :: Apache Software License',
         'Topic :: Utilities',
