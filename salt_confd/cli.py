@@ -17,19 +17,55 @@ The CLI entry point module.
 '''
 from __future__ import absolute_import, print_function, unicode_literals
 
+# stdlib
 import re
 import os
+import sys
+import copy
 import logging
 
+# local modules
 from salt_confd.parsers import SaltConfdOptionParser
 
+# Salt modules
 import salt.loader
 import salt.cli.caller
+import salt.utils.jinja
 import salt.utils.stringio
+import salt.utils.templates
 from salt.utils.verify import verify_log
+
+# 3rd party libs
+import jinja2
 
 
 log = logging.getLogger(__name__)
+
+
+def getv(self, value, sort_keys=True, indent=None):
+    return jinja2.Markup(value)
+
+
+def parse(self, parser):
+    log.error(self.environment.filters)
+    self.environment.filters.update({
+        'getv': self.getv
+    })
+    if parser.stream.current.value == 'import_yaml':
+        return self.parse_yaml(parser)
+    elif parser.stream.current.value == 'import_json':
+        return self.parse_json(parser)
+    elif parser.stream.current.value == 'import_text':
+        return self.parse_text(parser)
+    elif parser.stream.current.value in self._load_parsers:
+        return self.parse_load(parser)
+    parser.fail('Unknown format ' + parser.stream.current.value,
+                parser.stream.current.lineno)
+
+salt.utils.jinja.SerializerExtension._load_parsers.update(['getv'])
+salt.utils.jinja.SerializerExtension.tags.update(['getv'])
+setattr(salt.utils.jinja.SerializerExtension, 'getv', getv)
+setattr(salt.utils.jinja.SerializerExtension, 'parse', parse)
 
 
 class SaltConfd(SaltConfdOptionParser):
@@ -55,6 +91,7 @@ class SaltConfd(SaltConfdOptionParser):
 
         # Always local client
         self.config['file_client'] = 'local'
+        self.config['transport'] = 'tcp'
 
         if not self.config.get('confdir'):
             self.config['confdir'] = os.path.join(self.config['config_dir'], 'confd')
@@ -81,7 +118,7 @@ class SaltConfd(SaltConfdOptionParser):
         rgx = re.compile(r'^(.*):\/\/(.*)$')
 
         for file_ in os.listdir(confd_dir):
-            confd_file =  os.path.join(confd_dir, file_)
+            confd_file = os.path.join(confd_dir, file_)
             if not os.path.isfile(confd_file):
                 continue
             with salt.utils.files.fopen(confd_file, 'r') as fp_:
