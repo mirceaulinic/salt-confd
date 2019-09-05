@@ -50,3 +50,87 @@ Installation
 ```bash
 $ pip install salt-confd
 ```
+
+Usage
+-----
+
+In the spirit of the original confd, I tried to preserve the CLI syntax and the
+general usage. Under the ``confdir`` directory (defaulting to
+``/etc/salt/confd``), you'd need to have the following structure:
+
+```bash
+$ tree /etc/salt/confd
+.
+|-- conf.d/
+|   `-- test.sls
+`-- templates/
+    `-- test.conf
+```
+
+That is, a subdirectory named ``conf.d`` having one or more files. The file
+extension doesn't matter, as the content is going to be interpreted as SLS, by
+default rendered as Jinja + YAML. This format could be however changed, by
+adding a hashbang at the top of the file, as detailed in [this 
+document](https://docs.saltstack.com/en/latest/ref/renderers/#overriding-the-default-renderer).
+
+For example, the contents of the ``test.sls`` file above:
+
+```yaml
+src: test.conf
+dest: /tmp/test
+```
+
+Where ``test.conf`` is the template file from the ``templates/`` directory:
+
+```jinja
+Hello world!
+
+I'm running on {{ grains.osfullname }} {{ grains.osrelease }}, and I have the
+following IPv6 addresses:
+
+{%- for addr in grains.ipv6 %}
+- {{ addr }}
+{%- endfor %}
+```
+
+With these two simple files, running ``salt-confd``:
+
+```bash
+$ salt-confd
+local:
+----------
+          ID: /tmp/test
+    Function: file.managed
+      Result: True
+     Comment: File /tmp/test updated
+     Started: 12:20:54.781405
+    Duration: 26.337 ms
+     Changes:   
+              ----------
+              diff:
+                  --- 
+                  +++ 
+                  @@ -0,0 +1,7 @@
+                  +Hello world!
+                  +
+                  +I'm running on Ubuntu 18.04, and I have the
+                  +following IPv6 addresses:
+                  +- ::1
+                  +- fe80::42:57ff:fe55:2afc
+                  +- fe80::9a9:9f9e:9a2c:6bf1
+
+Summary for local
+------------
+Succeeded: 1 (changed=1)
+Failed:    0
+------------
+Total states run:     1
+Total run time:  26.337 ms
+```
+
+In brief, there are 3 steps to follow:
+
+1. Install ``salt-confd``.
+2. Put the files as mentioned above (i.e., as you'd do when using the original
+   ``confd``).
+3. Run ``salt-confd``.
