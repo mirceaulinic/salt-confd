@@ -43,6 +43,8 @@ In short, here's why I took this approach:
   feature, you won't need to fork the entire project and re-compile it; instead,
   you can preserve the existing usage and just provide it with your own code
   implementing the feature or backend you need.
+* For monitoring/logging purposes, you might want to send the results somewhere,
+  or simply have some post-checks / validate the output.
 
 Installation
 ------------
@@ -126,6 +128,60 @@ Failed:    0
 ------------
 Total states run:     1
 Total run time:  26.337 ms
+```
+
+You can display the previous return as JSON, which could be helpful in
+combination with ``jq`` to validate the output, e.g.,
+
+```bash
+$ salt-confd --out=json
+{
+    "local": {
+        "file_|-/tmp/test_|-/tmp/test_|-managed": {
+            "changes": {
+                "diff": "--- \n+++ \n@@ -0,0 +1,7 @@\n+Hello world!\n+\n+I'm running on Ubuntu 18.04, and I have the\n+following IPv6 addresses:\n+- ::1\n+- fe80::42:57ff:fe55:2afc\n+- fe80::9a9:9f9e:9a2c:6bf1\n"
+            },
+            "pchanges": {},
+            "comment": "File /tmp/test updated",
+            "name": "/tmp/test",
+            "result": true,
+            "__sls__": "confd",
+            "__run_num__": 0,
+            "start_time": "13:17:12.342262",
+            "duration": 26.274,
+            "__id__": "/tmp/test"
+        }
+    }
+}
+```
+
+Additionally, if you'd like to log in a Slack (or other places) the changes
+salt-confd is applying, you can execute with:
+
+```bash
+$ salt-confd --return slack
+```
+
+After setting the details into the configuration file (by default
+``/etc/salt/confd.yml``), as 
+[documented](https://docs.saltstack.com/en/latest/ref/returners/all/salt.returners.slack_returner.html),
+e.g.,
+
+``/etc/salt/confd.yml``
+
+```yaml
+slack.channel: salt-confd
+slack.api_key: <api key>
+slack.username: salt-confd
+slack.as_user: salt-confd
+slack.yaml_format: true
+```
+
+To always send the output to Slack or where you'd like to monitor these changes,
+add the following line to ``/etc/salt/confd.yml``:
+
+```yaml
+returner: slack
 ```
 
 In brief, there are 3 steps to follow:
