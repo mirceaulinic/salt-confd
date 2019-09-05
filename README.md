@@ -134,3 +134,11 @@ In brief, there are 3 steps to follow:
 2. Put the files as mentioned above (i.e., as you'd do when using the original
    ``confd``).
 3. Run ``salt-confd``.
+
+What is this thing
+------------------
+
+This plugin is simply a wrapper executing various Salt internal code, with
+bespoken configuration options and customised calls, in such a way to facilitate
+the management of the configuration files to provide a more straight forward
+experience.
