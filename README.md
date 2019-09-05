@@ -14,6 +14,15 @@ alleviate this, however it still cannot get better than ``confd`` - from this
 perspective. Alas, it's written in Python (please let's not have this discussion
 over here 😄).
 
+I see it rather as a trade-off: while ``confd`` is only a 5MB binary, I haven't
+managed yet to have this installation (together with dependencies) under 76MB.
+That said, if you already have Salt installed, you might find this helpful, as
+all you've got to do is install this package, which in this case would bring a
+tiny overhead. Otherwise, I'd invite you to evaluate: with ``salt-confd`` you
+can do a lot more than the original ``confd`` (see also some notes and examples
+below), though the decision if yours to balance your requirements and goals vs.
+the additional overhead.
+
 In short, here's why I took this approach:
 
 * Why not? It's fun.
