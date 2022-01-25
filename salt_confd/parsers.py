@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import logging
 import optparse
@@ -14,9 +15,11 @@ import salt.utils.parsers
 import salt.config as config
 
 
+log = logging.getLogger(__name__)
+
 def salt_information():
     '''
-    Return version of Salt and salt-sproxy.
+    Return version of Salt and salt-confd.
     '''
     yield 'Salt', salt.version.__version__
     yield 'Salt Confd', salt_confd.version.__version__
@@ -87,7 +90,7 @@ class SaltConfdOptionParser(six.with_metaclass(salt.utils.parsers.OptionParserMe
     usage = '%prog [options]'
 
     # ConfigDirMixIn config filename attribute
-    _config_filename_ = 'confd.yml'
+    _config_filename = 'confd.yml'
 
     # LogLevelMixIn attributes
     _default_logging_level_ = config.DEFAULT_MINION_OPTS['log_level']
@@ -113,7 +116,7 @@ class SaltConfdOptionParser(six.with_metaclass(salt.utils.parsers.OptionParserMe
         )
         self.add_option(
             '--confdir',
-            default='/etc/salt/confd',
+            default=None,
             help='The Salt confd conf directory'
         )
         self.add_option(
@@ -165,7 +168,18 @@ class SaltConfdOptionParser(six.with_metaclass(salt.utils.parsers.OptionParserMe
             default=False,
             help=('Run once and exit.')
         )
+        self.add_option(
+            '--dest-path',
+            default='/tmp/',
+            help='The default destination where to save the generated files'
+        )
 
     def setup_config(self):
         return config.minion_config(self.get_config_file_path(),
                                     cache_minion_id=True)
+
+
+    def get_config_file_path(self, configfile=None):
+        if configfile is None:
+            configfile = self._config_filename
+        return os.path.join(self.options.config_dir, configfile)

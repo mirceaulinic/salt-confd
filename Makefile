@@ -1,6 +1,6 @@
 VERSION ?= $(shell git describe --tags --always --dirty="-dev")
 SALT_VERSION ?= 2019.2.0
-IMAGE ?= mirceaulinic/salt-sproxy
+IMAGE ?= mirceaulinic/salt-confd
 TAG ?= $(IMAGE):$(VERSION)
 
 release:

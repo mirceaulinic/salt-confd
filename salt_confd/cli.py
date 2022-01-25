@@ -47,7 +47,6 @@ def getv(self, value, sort_keys=True, indent=None):
 
 
 def parse(self, parser):
-    log.error(self.environment.filters)
     self.environment.filters.update({
         'getv': self.getv
     })
@@ -73,6 +72,7 @@ class SaltConfd(SaltConfdOptionParser):
     Render the template(s) to generate the configuration files.
     '''
 
+    _config_filename = 'confd.yml'
     def run(self):
         '''
         Execute a lightweight salt-call with bespoken options.
@@ -94,7 +94,7 @@ class SaltConfd(SaltConfdOptionParser):
         self.config['transport'] = 'tcp'
 
         if not self.config.get('confdir'):
-            self.config['confdir'] = os.path.join(self.config['config_dir'], 'confd')
+            self.config['confdir'] = self.config['config_dir']
 
         confd_dir = os.path.join(self.config['confdir'], 'conf.d')
         templates_dir = os.path.join(self.config['confdir'], 'templates')
@@ -133,12 +133,12 @@ class SaltConfd(SaltConfdOptionParser):
                     **kwargs
                 )
                 res = ret.read() if salt.utils.stringio.is_readable(ret) else ret
-                if not rgx.match(res['src']):
-                    res['src'] = 'salt://' + res['src']
-                if not res.get('template'):
-                    res['template'] = 'jinja'
-                item = os.path.splitext(file_)[0]
-                self.config['confd'][item] = res
+                for dest, opts in res.items():
+                    if not rgx.match(opts['src']):
+                        opts['src'] = 'salt://' + opts['src']
+                    if not opts.get('template'):
+                        opts['template'] = 'jinja'
+                    self.config['confd'][dest] = opts
 
         caller = salt.cli.caller.Caller.factory(self.config)
         caller.run()
