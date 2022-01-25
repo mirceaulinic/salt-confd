@@ -16,7 +16,7 @@ with open("requirements.txt", "r") as fs:
 
 setup(
     name='salt-confd',
-    version='2019.9.0a1',
+    version='2022.2.0',
     namespace_packages=['salt_confd'],
     packages=find_packages(),
     author='Mircea Ulinic',

@@ -1,7 +1,7 @@
 import pkg_resources
 
 try:
-    __version__ = pkg_resources.get_distribution('salt_sproxy').version
+    __version__ = pkg_resources.get_distribution('salt_confd').version
 except pkg_resources.DistributionNotFound:
     __version__ = 'Not installed'
 
