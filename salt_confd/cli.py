@@ -103,7 +103,6 @@ class SaltConfd(SaltConfdOptionParser):
         self.config['file_roots']['base'].append(templates_dir)
 
         # Setup file logging!
-        self.setup_logfile_logger()
         verify_log(self.config)
 
         self.config['fun'] = 'state.apply'
