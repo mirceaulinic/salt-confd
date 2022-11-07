@@ -8,7 +8,6 @@ import multiprocessing
 
 import salt_confd.version
 
-from salt.ext import six
 import salt.version
 import salt.utils.args
 import salt.utils.parsers
@@ -62,19 +61,20 @@ salt.version.salt_information = salt_information
 salt.version.dependency_information = dependency_information
 
 
-class SaltConfdOptionParser(six.with_metaclass(salt.utils.parsers.OptionParserMeta,
-                                              salt.utils.parsers.OptionParser,
-                                              salt.utils.parsers.ConfigDirMixIn,
-                                              salt.utils.parsers.ExecutorsMixIn,
-                                              salt.utils.parsers.MergeConfigMixIn,
-                                              salt.utils.parsers.LogLevelMixIn,
-                                              salt.utils.parsers.OutputOptionsMixIn,
-                                              salt.utils.parsers.HardCrashMixin,
-                                              salt.utils.parsers.SaltfileMixIn,
-                                              salt.utils.parsers.ArgsStdinMixIn,
-                                              salt.utils.parsers.ProfilingPMixIn,
-                                              salt.utils.parsers.NoParseMixin,
-                                              salt.utils.parsers.CacheDirMixIn)):
+class SaltConfdOptionParser(salt.utils.parsers.OptionParser,
+                            salt.utils.parsers.ConfigDirMixIn,
+                            salt.utils.parsers.ExecutorsMixIn,
+                            salt.utils.parsers.MergeConfigMixIn,
+                            salt.utils.parsers.LogLevelMixIn,
+                            salt.utils.parsers.OutputOptionsMixIn,
+                            salt.utils.parsers.HardCrashMixin,
+                            salt.utils.parsers.SaltfileMixIn,
+                            salt.utils.parsers.ArgsStdinMixIn,
+                            salt.utils.parsers.ProfilingPMixIn,
+                            salt.utils.parsers.NoParseMixin,
+                            salt.utils.parsers.CacheDirMixIn,
+                            metaclass=salt.utils.parsers.OptionParserMeta,
+):
 
     VERSION = salt_confd.version.__version__
 
